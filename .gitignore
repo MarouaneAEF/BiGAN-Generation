@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Virtual environments
+venv/
+env/
+.env/
+
+# IDE
+.vscode/
+.idea/
+
+# Data directories
+data/
+synthetic_data/
+
+# Output directories
+bigan_output/
+bigan_color_output/
+bigan_custom_output/
+
+# OS
+.DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store 
