@@ -86,10 +86,7 @@ The training process generates several visualizations:
 ### Latest Training Results
 
 #### Training Curves
-![Training Curves]
-<p align="center">
-  <img src="bigan-work/bigan_custom_output/training_curves_epoch_50.png" alt="Generated Samples Evolution">
-</p>
+
 ### Training Evolution
 
 #### Generated Samples Evolution
