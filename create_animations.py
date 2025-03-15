@@ -38,19 +38,19 @@ def main():
     
     # Create GIFs for different aspects of training
     create_gif(
-        "bigan_custom_output",
+        "bigan_output",
         "generated_epoch_*.png",
         "animations/generated_samples.gif"
     )
     
     create_gif(
-        "bigan_custom_output",
+        "bigan_output",
         "reconstruction_epoch_*.png",
         "animations/reconstruction.gif"
     )
     
     create_gif(
-        "bigan_custom_output",
+        "bigan_output",
         "training_curves_epoch_*.png",
         "animations/training_curves.gif"
     )
