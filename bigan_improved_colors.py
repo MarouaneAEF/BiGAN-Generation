@@ -545,7 +545,6 @@ class BiGAN:
             if (epoch + 1) % SAVE_INTERVAL == 0 or epoch == 0:
                 self.save_samples(epoch + 1)
                 self.save_reconstructions(x_train[:10], epoch + 1)
-                self.save_training_curves(d_losses, g_losses, r_losses, d_accs, epoch + 1)
         
         print("Training completed!")
     
@@ -625,52 +624,6 @@ class BiGAN:
             plt.axis('off')
         
         plt.savefig(f"bigan_output/reconstruction_epoch_{epoch}.png")
-        plt.close()
-    
-    def save_training_curves(self, d_losses, g_losses, r_losses, d_accs, epoch):
-        """Save training curves"""
-        plt.figure(figsize=(15, 10))
-        
-        # Adversarial losses
-        plt.subplot(2, 2, 1)
-        plt.plot(d_losses, label='Discriminator')
-        plt.plot(g_losses, label='Generator')
-        plt.title('Adversarial Losses')
-        plt.xlabel('Epoch')
-        plt.ylabel('Loss')
-        plt.legend()
-        
-        # Reconstruction losses
-        plt.subplot(2, 2, 2)
-        plt.plot(r_losses, label='MSE', color='blue')
-        plt.title('Reconstruction Losses')
-        plt.xlabel('Epoch')
-        plt.ylabel('Loss')
-        plt.legend()
-        
-        # Discriminator accuracy
-        plt.subplot(2, 2, 3)
-        plt.plot(np.array(d_accs) * 100)
-        plt.title('Discriminator Accuracy')
-        plt.xlabel('Epoch')
-        plt.ylabel('Accuracy (%)')
-        plt.ylim([0, 100])
-        
-        # Pixel distribution for the last generation
-        plt.subplot(2, 2, 4)
-        z = np.random.normal(0, 1, (1, LATENT_DIM))
-        img = self.generator.predict(z, verbose=0)[0]
-        
-        # Histogram per color channel
-        for c, color in enumerate(['r', 'g', 'b']):
-            values = img[:,:,c].flatten()
-            plt.hist(values, bins=50, color=color, alpha=0.7)
-            
-        plt.title(f'Pixel Distribution (min={img.min():.2f}, max={img.max():.2f})')
-        plt.xlim(-1, 1)
-        
-        plt.tight_layout()
-        plt.savefig(f"bigan_output/training_curves_epoch_{epoch}.png")
         plt.close()
 
 def load_and_preprocess_cifar10(subset_ratio=1.0):
