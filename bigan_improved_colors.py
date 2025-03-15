@@ -310,11 +310,13 @@ class BiGAN:
         # Save real samples
         self.save_real_samples(x_train[:25])
         
-        # Performance tracking histories
-        d_losses = []
-        g_losses = []
-        r_losses = []
-        d_accs = []
+        # Initialize history for training curves
+        history = {
+            'd_loss': [],
+            'g_loss': [],
+            'r_loss': [],
+            'd_acc': []
+        }
         
         # Define training functions with tf.function to avoid retracing
         @tf.function(reduce_retracing=True)
@@ -408,7 +410,7 @@ class BiGAN:
         for epoch in range(EPOCHS):
             start_time = time.time()
             
-            # Epoch metrics
+            # Initialize epoch metrics
             epoch_d_losses = []
             epoch_g_losses = []
             epoch_r_losses = []
@@ -447,7 +449,7 @@ class BiGAN:
                 fake_y_tensor = tf.convert_to_tensor(fake_y, dtype=tf.float32)
                 
                 #----- 1. Train discriminator -----
-                d_result = train_discriminator(
+                d_loss, d_acc = train_discriminator(
                     real_imgs_tensor, 
                     encoded_z_tensor, 
                     fake_imgs_tensor, 
@@ -455,23 +457,6 @@ class BiGAN:
                     valid_y_tensor, 
                     fake_y_tensor
                 )
-                # Extract scalar values from tensors
-                try:
-                    d_loss_tensor = d_result[0]
-                    d_acc_tensor = d_result[1]
-                    # Check if tensors are size 1 and convert them
-                    d_loss_value = float(d_loss_tensor.numpy())
-                    d_acc_value = float(d_acc_tensor.numpy())
-                except Exception as e:
-                    print(f"Error converting discriminator tensors: {e}")
-                    print(f"Types: {type(d_result[0])}, {type(d_result[1])}")
-                    if hasattr(d_result[0], 'shape'):
-                        print(f"Shapes: {d_result[0].shape}, {d_result[1].shape}")
-                    # Use default value in case of error
-                    d_loss_value = 0.0
-                    d_acc_value = 0.5
-                
-                d_loss = [d_loss_value, d_acc_value]
                 
                 #----- 2. Train generator/encoder (adversarial) -----
                 g_loss = train_generator(
@@ -480,55 +465,35 @@ class BiGAN:
                     valid_y_tensor, 
                     fake_y_tensor
                 )
-                # Convert generator result
-                try:
-                    g_loss_value = float(g_loss.numpy())
-                except Exception as e:
-                    print(f"Error converting generator tensor: {e}")
-                    print(f"Type: {type(g_loss)}")
-                    if hasattr(g_loss, 'shape'):
-                        print(f"Shape: {g_loss.shape}")
-                    # Use default value
-                    g_loss_value = 0.0
                 
                 #----- 3. Train reconstruction (MSE) -----
                 r_loss = train_reconstruction(real_imgs_tensor)
-                # Convert reconstruction result
-                try:
-                    r_loss_value = float(r_loss.numpy())
-                except Exception as e:
-                    print(f"Error converting reconstruction tensor: {e}")
-                    print(f"Type: {type(r_loss)}")
-                    if hasattr(r_loss, 'shape'):
-                        print(f"Shape: {r_loss.shape}")
-                    # Use default value
-                    r_loss_value = 0.0
                 
-                # Store losses
-                epoch_d_losses.append(d_loss[0])
-                epoch_g_losses.append(g_loss_value)
-                epoch_r_losses.append(r_loss_value)
-                epoch_d_accs.append(d_loss[1])
+                # Store batch metrics
+                epoch_d_losses.append(float(d_loss))
+                epoch_g_losses.append(float(g_loss))
+                epoch_r_losses.append(float(r_loss))
+                epoch_d_accs.append(float(d_acc))
                 
-                # Update progress bar
+                # Update progress bar with current losses
                 progress_bar.set_postfix({
-                    'D Loss': f'{d_loss[0]:.4f}',
-                    'G Loss': f'{g_loss_value:.4f}',
-                    'R Loss': f'{r_loss_value:.4f}',
-                    'D Acc': f'{d_loss[1]*100:.1f}%'
+                    'D Loss': f'{float(d_loss):.4f}',
+                    'G Loss': f'{float(g_loss):.4f}',
+                    'R Loss': f'{float(r_loss):.4f}',
+                    'D Acc': f'{float(d_acc)*100:.1f}%'
                 })
             
-            # Calculate averages
+            # Calculate epoch averages
             avg_d_loss = np.mean(epoch_d_losses)
             avg_g_loss = np.mean(epoch_g_losses)
             avg_r_loss = np.mean(epoch_r_losses)
             avg_d_acc = np.mean(epoch_d_accs)
             
             # Store in history
-            d_losses.append(avg_d_loss)
-            g_losses.append(avg_g_loss)
-            r_losses.append(avg_r_loss)
-            d_accs.append(avg_d_acc)
+            history['d_loss'].append(avg_d_loss)
+            history['g_loss'].append(avg_g_loss)
+            history['r_loss'].append(avg_r_loss)
+            history['d_acc'].append(avg_d_acc)
             
             # Elapsed time
             elapsed = time.time() - start_time
@@ -545,6 +510,7 @@ class BiGAN:
             if (epoch + 1) % SAVE_INTERVAL == 0 or epoch == 0:
                 self.save_samples(epoch + 1)
                 self.save_reconstructions(x_train[:10], epoch + 1)
+                self.save_training_curves(history, epoch + 1)
         
         print("Training completed!")
     
@@ -624,6 +590,35 @@ class BiGAN:
             plt.axis('off')
         
         plt.savefig(f"bigan_output/reconstruction_epoch_{epoch}.png")
+        plt.close()
+    
+    def save_training_curves(self, history, epoch):
+        """Save training curves"""
+        plt.figure(figsize=(15, 5))
+        
+        # Plot losses
+        plt.subplot(1, 2, 1)
+        plt.plot(history['d_loss'], label='Discriminator')
+        plt.plot(history['g_loss'], label='Generator')
+        plt.plot(history['r_loss'], label='Reconstruction')
+        plt.title('Training Losses')
+        plt.xlabel('Epoch')
+        plt.ylabel('Loss')
+        plt.legend()
+        plt.grid(True)
+        
+        # Plot discriminator accuracy
+        plt.subplot(1, 2, 2)
+        plt.plot(history['d_acc'], label='Discriminator Accuracy')
+        plt.title('Discriminator Accuracy')
+        plt.xlabel('Epoch')
+        plt.ylabel('Accuracy')
+        plt.legend()
+        plt.grid(True)
+        
+        # Save plot
+        plt.tight_layout()
+        plt.savefig(f"bigan_output/training_curves_epoch_{epoch}.png")
         plt.close()
 
 def load_and_preprocess_cifar10(subset_ratio=1.0):
