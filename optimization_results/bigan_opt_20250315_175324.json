@@ -1,0 +1,62 @@
+{
+  "best_parameters": {
+    "learning_rate": 0.00010137792414396447,
+    "batch_size": 95,
+    "weight_recon": 0.9740796739101449,
+    "weight_adversarial": 0.5348269164003607,
+    "latent_dim": 224
+  },
+  "best_score": 10000000000.0,
+  "all_trials": [
+    {
+      "parameters": {
+        "learning_rate": 0.00010137792414396447,
+        "batch_size": 95,
+        "weight_recon": 0.9740796739101449,
+        "weight_adversarial": 0.5348269164003607,
+        "latent_dim": 224
+      },
+      "score": 10000000000.0
+    },
+    {
+      "parameters": {
+        "learning_rate": 5.61151641533451e-05,
+        "batch_size": 123,
+        "weight_recon": 2.91063591313307,
+        "weight_adversarial": 0.6009974718380315,
+        "latent_dim": 94
+      },
+      "score": 10000000000.0
+    },
+    {
+      "parameters": {
+        "learning_rate": 0.001,
+        "batch_size": 32,
+        "weight_recon": 0.1,
+        "weight_adversarial": 0.1,
+        "latent_dim": 197
+      },
+      "score": 10000000000.0
+    },
+    {
+      "parameters": {
+        "learning_rate": 1.1057241461214675e-05,
+        "batch_size": 49,
+        "weight_recon": 8.319870213471042,
+        "weight_adversarial": 1.9903263755483016,
+        "latent_dim": 75
+      },
+      "score": 10000000000.0
+    },
+    {
+      "parameters": {
+        "learning_rate": 0.0007896049031549579,
+        "batch_size": 123,
+        "weight_recon": 0.11462521025656641,
+        "weight_adversarial": 0.11193323077134457,
+        "latent_dim": 204
+      },
+      "score": 10000000000.0
+    }
+  ]
+}

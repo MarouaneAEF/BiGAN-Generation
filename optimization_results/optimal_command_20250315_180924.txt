@@ -1,0 +1,9 @@
+python run_custom_training.py \
+    --dataset cifar10 \
+    --epochs 100 \
+    --batch_size 51 \
+    --learning_rate 0.000019 \
+    --beta 6.0692 \
+    --adversarial_weight 0.4101 \
+    --latent_dim 178 \
+    --device mps

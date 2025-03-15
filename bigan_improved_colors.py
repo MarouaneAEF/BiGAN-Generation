@@ -16,9 +16,9 @@ from tqdm import tqdm
 
 # Model constants
 IMG_SHAPE = (32, 32, 3)
-LATENT_DIM = 250
-BATCH_SIZE = 16
-EPOCHS = 50
+LATENT_DIM = 128
+BATCH_SIZE = 32
+EPOCHS = 200
 SAVE_INTERVAL = 5
 LEARNING_RATE = 0.0001
 
