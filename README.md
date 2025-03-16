@@ -122,8 +122,6 @@ The training process generates several visualizations:
 
 ### Latest Training Results
 
-#### Training Curves
-
 ### Training Evolution
 
 #### Reconstruction Evolution
