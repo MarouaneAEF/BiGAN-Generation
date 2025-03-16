@@ -126,12 +126,12 @@ The training process generates several visualizations:
 
 #### Reconstruction Evolution
 <p align="center">
-  <img src="animations/reconstruction.gif?v=20240629" alt="Reconstruction Evolution">
+  <img src="https://github.com/MarouaneAEF/BiGAN-Generation/raw/main/animations/reconstruction.gif" alt="Reconstruction Evolution">
 </p>
 
 #### Training Curves Evolution
 <p align="center">
-  <img src="animations/training_curves.gif?v=20240629" alt="Training Curves Evolution">
+  <img src="https://github.com/MarouaneAEF/BiGAN-Generation/raw/main/animations/training_curves.gif" alt="Training Curves Evolution">
 </p>
 
 The animations above show:
